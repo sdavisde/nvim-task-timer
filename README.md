@@ -41,7 +41,7 @@ Works with standard markdown task syntax:
 
 ```lua
 {
-  "your-username/nvim-task-timer",
+  "sdavisde/nvim-task-timer",
   ft = "markdown",
   config = function()
     require("task-timer").setup()
@@ -53,7 +53,7 @@ Works with standard markdown task syntax:
 
 ```lua
 use {
-  "your-username/nvim-task-timer",
+  "sdavisde/nvim-task-timer",
   ft = "markdown",
   config = function()
     require("task-timer").setup()
@@ -64,7 +64,7 @@ use {
 ### vim-plug
 
 ```vim
-Plug 'your-username/nvim-task-timer'
+Plug 'sdavisde/nvim-task-timer'
 ```
 
 ## ⚙️ Configuration
