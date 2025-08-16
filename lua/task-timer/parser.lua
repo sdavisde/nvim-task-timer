@@ -18,8 +18,9 @@ end
 
 function M.find_time_blocks(line)
   local blocks = {}
-  -- Find all time block patterns in the line
-  for block in line:gmatch("%[%d+%.%d+%.%d+@%d+:%d+%-[%d:]*%]") do
+  
+  -- Find completed time blocks: [MM.DD.YYYY@HH:MM - MM.DD.YYYY@HH:MM]
+  for block in line:gmatch("%[%d+%.%d+%.%d+@%d+:%d+ %- %d+%.%d+%.%d+@%d+:%d+%]") do
     local parsed = timestamp.parse_time_block(block)
     if parsed then
       table.insert(blocks, {
@@ -28,6 +29,18 @@ function M.find_time_blocks(line)
       })
     end
   end
+  
+  -- Find active time blocks: [MM.DD.YYYY@HH:MM-]
+  for block in line:gmatch("%[%d+%.%d+%.%d+@%d+:%d+%-]") do
+    local parsed = timestamp.parse_time_block(block)
+    if parsed then
+      table.insert(blocks, {
+        text = block,
+        parsed = parsed
+      })
+    end
+  end
+  
   return blocks
 end
 

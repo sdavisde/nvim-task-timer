@@ -22,27 +22,38 @@ function M.format_time_block_start()
   return "[" .. M.get_current_datetime() .. "-]"
 end
 
-function M.format_time_block_end(start_time)
-  local current_time = M.get_current_time()
-  -- Extract the date and start time from the start_time string
-  local date_time = start_time:match("%[(.-)%-]")
-  if date_time then
-    return "[" .. date_time .. "-" .. current_time .. "]"
+function M.format_time_block_end(start_block)
+  local start_date_time = start_block:match("%[(.-)%-]")
+  if start_date_time then
+    local end_date_time = M.get_current_date() .. "@" .. M.get_current_time()
+    return "[" .. start_date_time .. " - " .. end_date_time .. "]"
   end
   return "[" .. M.get_current_datetime() .. "]"
 end
 
 function M.parse_time_block(text)
-  -- Match pattern like [08.22.2025@14:30-15:15] or [08.22.2025@14:30-]
-  local date, start_time, end_time = text:match("%[(%d+%.%d+%.%d+)@(%d+:%d+)%-(%d*:?%d*)%]")
-  if date and start_time then
+  -- Try to match completed format: [MM.DD.YYYY@HH:MM - MM.DD.YYYY@HH:MM]
+  local start_date, start_time, end_date, end_time = text:match("%[(%d+%.%d+%.%d+)@(%d+:%d+) %- (%d+%.%d+%.%d+)@(%d+:%d+)%]")
+  if start_date and start_time and end_time then
     return {
-      date = date,
+      date = start_date,
       start_time = start_time,
-      end_time = end_time ~= "" and end_time or nil,
-      is_active = end_time == "" or end_time == nil
+      end_time = end_time,
+      is_active = false
     }
   end
+  
+  -- Try to match active format: [MM.DD.YYYY@HH:MM-]
+  local date, time = text:match("%[(%d+%.%d+%.%d+)@(%d+:%d+)%-]")
+  if date and time then
+    return {
+      date = date,
+      start_time = time,
+      end_time = nil,
+      is_active = true
+    }
+  end
+  
   return nil
 end
 
