@@ -1,0 +1,207 @@
+*task-timer.txt*    Task Timer for Neovim                    *task-timer*
+
+==============================================================================
+Table of Contents                                   *task-timer-contents*
+
+1. Introduction ................................... |task-timer-introduction|
+2. Requirements ................................... |task-timer-requirements|
+3. Installation ................................... |task-timer-installation|
+4. Usage .......................................... |task-timer-usage|
+5. Configuration .................................. |task-timer-configuration|
+6. Commands ....................................... |task-timer-commands|
+7. API ............................................ |task-timer-api|
+8. Examples ....................................... |task-timer-examples|
+
+==============================================================================
+1. Introduction                                   *task-timer-introduction*
+
+Task Timer is a Neovim plugin for tracking time spent on tasks in markdown
+files. It provides automatic timestamping, visual indicators, and time
+calculation for tasks using standard markdown checkbox syntax.
+
+Features:
+- Time tracking with automatic timestamps
+- Visual indicators for active/completed/today's tasks
+- Duration calculation and warnings for long tasks
+- Manual time entry support
+- Configurable time formats and behaviors
+- Statusline integration
+
+==============================================================================
+2. Requirements                                   *task-timer-requirements*
+
+- Neovim 0.8.0 or later
+- Markdown files (*.md)
+
+==============================================================================
+3. Installation                                   *task-timer-installation*
+
+Using lazy.nvim:
+>lua
+    {
+      "your-username/nvim-task-timer",
+      config = function()
+        require("task-timer").setup()
+      end,
+      ft = "markdown",
+    }
+<
+
+Using packer.nvim:
+>lua
+    use {
+      "your-username/nvim-task-timer",
+      config = function()
+        require("task-timer").setup()
+      end,
+      ft = "markdown",
+    }
+<
+
+==============================================================================
+4. Usage                                          *task-timer-usage*
+
+Task Timer works with standard markdown task syntax:
+>markdown
+    - [ ] Incomplete task
+    - [x] Completed task
+<
+
+Basic workflow:
+1. Place cursor on or under a task line
+2. Press <leader>ts to start a timer
+3. Press <leader>te to end the timer
+4. View the automatically generated timestamp
+
+Time blocks are displayed as:
+>markdown
+    - [ ] My task [08.16.2025@14:30-15:15]
+<
+
+Active time blocks (no end time):
+>markdown
+    - [ ] Current task [08.16.2025@14:30-]
+<
+
+Manual time entry:
+>markdown
+    - [x] Quick task {30m}
+    - [x] Long task {2h30m}
+<
+
+==============================================================================
+5. Configuration                                  *task-timer-configuration*
+
+Setup with custom options:
+>lua
+    require("task-timer").setup({
+      time_format = "24h",          -- "24h" or "12h"
+      date_format = "%m.%d.%Y",     -- strftime format
+      long_task_threshold = 120,    -- minutes
+      auto_save = true,             -- auto-save after timer operations
+      keymaps = {
+        start_timer = "<leader>ts",
+        end_timer = "<leader>te",
+        resume_timer = "<leader>tr",
+      },
+      visual = {
+        active_highlight = "TaskTimerActive",
+        completed_highlight = "TaskTimerCompleted",
+        today_highlight = "TaskTimerToday",
+      },
+    })
+<
+
+Configuration Options:                            *task-timer-config-options*
+
+time_format        string   Time display format ("24h" or "12h")
+date_format        string   Date format using strftime syntax
+long_task_threshold number  Minutes threshold for long task warnings
+auto_save          boolean  Auto-save buffer after timer operations
+keymaps            table    Key mappings for timer operations
+visual             table    Highlight group configuration
+
+==============================================================================
+6. Commands                                       *task-timer-commands*
+
+:TaskTimerStart                                   *:TaskTimerStart*
+    Start a timer for the current task. Equivalent to <leader>ts.
+
+:TaskTimerEnd                                     *:TaskTimerEnd*
+    End the active timer for the current task. Equivalent to <leader>te.
+
+:TaskTimerResume                                  *:TaskTimerResume*
+    Resume timing for a task (same as start). Equivalent to <leader>tr.
+
+:TaskTimerSummary                                 *:TaskTimerSummary*
+    Show a summary of the current task's time tracking in a floating window.
+
+Key Mappings:                                     *task-timer-keymaps*
+
+<leader>ts    Start timer for current task
+<leader>te    End timer for current task
+<leader>tr    Resume timer for current task
+
+==============================================================================
+7. API                                            *task-timer-api*
+
+The plugin exposes functions for programmatic access:
+
+require("task-timer").start_timer()              *task-timer.start_timer()*
+    Start a timer for the current task.
+
+require("task-timer").end_timer()                *task-timer.end_timer()*
+    End the active timer for the current task.
+
+require("task-timer").resume_timer()             *task-timer.resume_timer()*
+    Resume timing for the current task.
+
+require("task-timer").show_summary()             *task-timer.show_summary()*
+    Display a summary of the current task's time tracking.
+
+require("task-timer").get_statusline_info()      *task-timer.get_statusline_info()*
+    Get current task timer info for statusline integration.
+    Returns: string with timer info or empty string
+
+==============================================================================
+8. Examples                                       *task-timer-examples*
+
+Basic task with time tracking:
+>markdown
+    - [ ] Write documentation [08.16.2025@14:30-15:15]
+    - [x] Code review [08.16.2025@09:00-09:30] [08.16.2025@13:00-13:15]
+<
+
+Task with manual time entry:
+>markdown
+    - [x] Quick meeting {45m}
+    - [x] Research phase {2h30m}
+<
+
+Task with mixed time tracking:
+>markdown
+    - [x] Feature implementation [08.15.2025@10:00-12:00] {1h30m}
+      - Implementation notes and research time
+      - Multiple time blocks for iterative work
+<
+
+Statusline integration:
+>lua
+    -- In your statusline configuration
+    local function task_timer_status()
+      return require("task-timer").get_statusline_info()
+    end
+    
+    -- Add to your statusline components
+    { task_timer_status, color = { fg = "#ffaa00" } }
+<
+
+Custom highlight groups:
+>lua
+    vim.api.nvim_set_hl(0, "TaskTimerActive", { fg = "#ff6600", bold = true })
+    vim.api.nvim_set_hl(0, "TaskTimerCompleted", { fg = "#00cc66" })
+    vim.api.nvim_set_hl(0, "TaskTimerToday", { fg = "#0099ff" })
+<
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
