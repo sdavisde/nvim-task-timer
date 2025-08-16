@@ -26,7 +26,7 @@ Works with standard markdown task syntax:
 
 1. Place cursor on or under a task line
 2. Press `<leader>ts` to start timer
-3. Press `<leader>te` to end timer  
+3. Press `<leader>te` to end timer
 4. View automatically generated timestamps
 
 ### Time Formats
@@ -70,7 +70,7 @@ Plug 'sdavisde/nvim-task-timer'
 ## ⚙️ Configuration
 
 ```lua
-require("task-timer").setup({
+require("sdavisde/nvim-task-timer").setup({
   time_format = "24h",          -- "24h" or "12h"
   date_format = "%m.%d.%Y",     -- strftime format
   long_task_threshold = 120,    -- minutes for warnings
@@ -82,7 +82,7 @@ require("task-timer").setup({
   },
   visual = {
     active_highlight = "TaskTimerActive",
-    completed_highlight = "TaskTimerCompleted", 
+    completed_highlight = "TaskTimerCompleted",
     today_highlight = "TaskTimerToday",
   },
 })
@@ -109,7 +109,7 @@ require("task-timer").setup({
 
 Time blocks are automatically highlighted:
 - 🟠 **Active timers** - Orange highlight
-- 🟢 **Completed timers** - Green highlight  
+- 🟢 **Completed timers** - Green highlight
 - 🔵 **Today's timers** - Blue highlight
 
 ## 📊 Statusline Integration
@@ -147,7 +147,7 @@ end
 - [ ] API integration [08.16.2025@14:00-]
 - [ ] Testing {45m}
 
-## Documentation  
+## Documentation
 - [x] User guide {2h15m}
 - [ ] API docs [08.16.2025@16:00-]
 ```
