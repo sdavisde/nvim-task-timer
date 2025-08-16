@@ -50,25 +50,25 @@ function M.calculate_duration(start_time, end_time)
   if not start_time or not end_time then
     return nil
   end
-  
+
   local start_hour, start_min = start_time:match("(%d+):(%d+)")
   local end_hour, end_min = end_time:match("(%d+):(%d+)")
-  
+
   if not start_hour or not end_hour then
     return nil
   end
-  
+
   start_hour, start_min = tonumber(start_hour), tonumber(start_min)
   end_hour, end_min = tonumber(end_hour), tonumber(end_min)
-  
+
   local start_minutes = start_hour * 60 + start_min
   local end_minutes = end_hour * 60 + end_min
-  
+
   -- Handle overnight times
   if end_minutes < start_minutes then
     end_minutes = end_minutes + 24 * 60
   end
-  
+
   return end_minutes - start_minutes
 end
 
@@ -76,10 +76,10 @@ function M.format_duration(minutes)
   if not minutes then
     return "Unknown"
   end
-  
+
   local hours = math.floor(minutes / 60)
   local mins = minutes % 60
-  
+
   if hours > 0 then
     return string.format("%dh %dm", hours, mins)
   else
@@ -93,13 +93,13 @@ function M.parse_manual_time(text)
   if not time_str then
     return nil
   end
-  
+
   local hours = time_str:match("(%d+)h") or 0
   local minutes = time_str:match("(%d+)m") or 0
-  
+
   hours = tonumber(hours)
   minutes = tonumber(minutes)
-  
+
   return hours * 60 + minutes
 end
 

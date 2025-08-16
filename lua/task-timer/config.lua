@@ -21,7 +21,7 @@ M.options = {}
 
 function M.setup(opts)
   M.options = vim.tbl_deep_extend("force", M.defaults, opts or {})
-  
+
   -- Set up highlight groups
   vim.api.nvim_set_hl(0, "TaskTimerActive", { fg = "#ffaa00", bold = true })
   vim.api.nvim_set_hl(0, "TaskTimerCompleted", { fg = "#00aa00" })

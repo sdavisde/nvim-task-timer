@@ -63,7 +63,7 @@ function M.find_current_task()
   local current_line = vim.api.nvim_get_current_line()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
   local line_num = cursor_pos[1]
-  
+
   -- Check if current line is a task
   if M.is_task_line(current_line) then
     return {
@@ -72,11 +72,11 @@ function M.find_current_task()
       indent = M.get_task_indent(current_line)
     }
   end
-  
+
   -- Look backwards for the nearest task at the same or lower indent level
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local current_indent = M.get_task_indent(current_line)
-  
+
   for i = line_num - 1, 1, -1 do
     local line = lines[i]
     if M.is_task_line(line) then
@@ -90,7 +90,7 @@ function M.find_current_task()
       end
     end
   end
-  
+
   return nil
 end
 
@@ -98,18 +98,18 @@ function M.get_task_context(line_num)
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local task_line = lines[line_num]
   local task_indent = M.get_task_indent(task_line)
-  
+
   local context = {
     main_task = { line_num = line_num, line = task_line },
     sub_tasks = {},
     notes = {}
   }
-  
+
   -- Find sub-tasks and notes (lines with greater indentation)
   for i = line_num + 1, #lines do
     local line = lines[i]
     local indent = M.get_task_indent(line)
-    
+
     if indent <= task_indent and line:match("%S") then
       -- Found a line at same or lower indentation that's not empty - stop here
       break
@@ -121,13 +121,13 @@ function M.get_task_context(line_num)
       end
     end
   end
-  
+
   return context
 end
 
 function M.calculate_total_time(context)
   local total_minutes = 0
-  
+
   -- Check main task
   local time_blocks = M.find_time_blocks(context.main_task.line)
   for _, block in ipairs(time_blocks) do
@@ -138,13 +138,13 @@ function M.calculate_total_time(context)
       end
     end
   end
-  
+
   -- Check manual time entries
   local manual_entries = M.find_manual_time_entries(context.main_task.line)
   for _, entry in ipairs(manual_entries) do
     total_minutes = total_minutes + entry.minutes
   end
-  
+
   -- Check sub-tasks
   for _, sub_task in ipairs(context.sub_tasks) do
     local sub_blocks = M.find_time_blocks(sub_task.line)
@@ -156,13 +156,13 @@ function M.calculate_total_time(context)
         end
       end
     end
-    
+
     local sub_manual = M.find_manual_time_entries(sub_task.line)
     for _, entry in ipairs(sub_manual) do
       total_minutes = total_minutes + entry.minutes
     end
   end
-  
+
   return total_minutes
 end
 
