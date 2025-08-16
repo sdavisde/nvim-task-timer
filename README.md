@@ -154,13 +154,17 @@ end
 
 ## 🔧 Development
 
-For development and testing, use the included development script:
+For development and testing, install the plugin locally in your Neovim configuration:
 
-```vim
-:luafile develop.lua
+```lua
+{
+  dir = "/path/to/nvim-task-timer",
+  config = function()
+    require("task-timer").setup()
+  end,
+  ft = "markdown",
+}
 ```
-
-This loads a simplified version for testing without full plugin installation.
 
 ## 📝 Requirements
 
